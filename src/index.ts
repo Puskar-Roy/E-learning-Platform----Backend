@@ -13,7 +13,7 @@ import authRoutes from './routes/authRoutes';
 
 const app: Express = express();
 
-const whitelist = ['https://<your-production-api-link>'];
+const whitelist = ['https://elearningplatformm.vercel.app'];
 
 const corsOptions: CorsOptions = {
   origin: function (origin, callback) {

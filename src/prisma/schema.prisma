@@ -7,11 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name     String
   email    String   @unique
   password String
+  role     Role     @default(USER)
   profile  Profile?
   enrollments UserEnrollment[]
   reviews   Review[]
@@ -30,7 +36,7 @@ model Course {
   category    String
   level       String
   enrollments UserEnrollment[]
-  reviews     Review[]  
+  reviews     Review[]
 }
 
 model UserEnrollment {
@@ -51,6 +57,4 @@ model Review {
   course      Course   @relation(fields: [courseId], references: [id])
   courseId    Int
   createdAt   DateTime @default(now())
-
- 
 }
