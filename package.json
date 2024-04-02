@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
-    "vercel-build": "echo Vercel-Build",
+    "vercel-build": "prisma generate",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix"
   },
