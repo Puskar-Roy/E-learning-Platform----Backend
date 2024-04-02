@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import validator from 'validator';
 import { createToken } from '../util/utils';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { sendEmail } from '../util/sendEmail';
 const prisma = new PrismaClient();
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -15,6 +16,13 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new Error('Invalid credentials');
+    }
+    if (!user.isVerified) {
+      await await sendEmail(user.id);
+      return res.status(200).json({
+        success: true,
+        message: 'At First Verify Your Email,A Verification email sent.',
+      });
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
@@ -62,13 +70,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       const token = createToken(newUser.id);
       return { user: newUser, token };
     });
-
-    return res.status(201).json({
-      message: 'Registration successful!',
-      success: true,
-      token: user.token,
-      id: user.user.id,
-    });
+    await await sendEmail(user.user.id);
+    return res
+      .status(200)
+      .json({ success: true, message: 'Verification email sent' });
   } catch (error) {
     console.error('Registration error:', error.message);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -80,3 +85,62 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 });
+
+export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
+  const { token } = req.query;
+  if (!token || typeof token !== 'string')
+    return res.status(400).send('Token not provided or invalid');
+
+  const verificationToken = await prisma.verificationToken.findUnique({
+    where: { token },
+  });
+  if (!verificationToken) return res.status(404).send('Invalid token');
+
+  if (verificationToken.expiresAt < new Date())
+    return res.status(400).send('Token has expired');
+
+  await prisma.user.update({
+    where: { id: verificationToken.userId },
+    data: { isVerified: true },
+  });
+
+  // Delete the verification token after it has been used
+  await prisma.verificationToken.delete({ where: { token } });
+
+  res.status(200).send('Email verified successfully');
+});
+
+export const dropDatabase = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      // Find the user by email
+      const user = await prisma.user.findUnique({
+        where: { email: 'miajhony6969@gmail.com' },
+        include: { verificationTokens: true }, // Include verificationTokens in the query
+      });
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: 'User not found' });
+      }
+
+      // Delete the user's verification tokens first
+      await prisma.verificationToken.deleteMany({
+        where: { userId: user.id },
+      });
+
+      // Delete the user
+      await prisma.user.delete({
+        where: { id: user.id },
+      });
+
+      return res.status(200).json({ success: true, message: 'DB Deleted!' });
+    } catch (error) {
+      console.error('Error dropping database:', error);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Error dropping database' });
+    }
+  }
+);

@@ -21,6 +21,8 @@ model User {
   profile  Profile?
   enrollments UserEnrollment[]
   reviews   Review[]
+   verificationTokens VerificationToken[]
+   isVerified   Boolean  @default(false)
 }
 
 model Profile {
@@ -57,4 +59,14 @@ model Review {
   course      Course   @relation(fields: [courseId], references: [id])
   courseId    Int
   createdAt   DateTime @default(now())
+}
+
+
+model VerificationToken {
+  id           Int      @id @default(autoincrement())
+  token        String   @unique
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime @default(dbgenerated("CURRENT_TIMESTAMP + interval '10 minutes'"))
 }

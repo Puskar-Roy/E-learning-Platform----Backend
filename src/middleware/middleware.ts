@@ -2,9 +2,11 @@ import { Request as ExpressRequest, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
 import { TokenData } from '../interfaces/tokenInterface';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 interface RequestWithUserId extends ExpressRequest {
-  _id: string;
+  id: number;
   iat: number;
   exp: number;
 }
@@ -23,8 +25,12 @@ export const protect = async (
     }
 
     const decoded = jwt.verify(token, config.JWT_SECRET) as TokenData;
-    // const user = await UserModel.findById(decoded._id);
-    // req._id = user._id;
+    const id = parseInt(decoded._id, 10);
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (user.id !== id && user.isVerified !== true) {
+      throw new Error('Unauthorized: No token provided');
+    }
+    req.id = user.id;
     next();
   } catch (error) {
     console.error('Authentication error:', error);
