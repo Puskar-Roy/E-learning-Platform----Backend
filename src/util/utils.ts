@@ -7,3 +7,7 @@ export const createToken = (_id: number) => {
     expiresIn: config.JWT_COOKIE_EXPIRES_IN,
   });
 };
+
+export const generateOTP = (): string => {
+  return Math.random().toString(36).substr(2, 6);
+};

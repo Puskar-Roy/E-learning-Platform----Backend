@@ -21,8 +21,8 @@ model User {
   profile  Profile?
   enrollments UserEnrollment[]
   reviews   Review[]
-   verificationTokens VerificationToken[]
-   isVerified   Boolean  @default(false)
+  verificationTokens VerificationToken[]
+  isVerified   Boolean  @default(false)
 }
 
 model Profile {
