@@ -3,7 +3,6 @@ import {
   addReview,
   updateReview,
   deleteReview,
-  getAllReviewsForCourse,
 } from '../controllers/reviewController';
 import { protect } from '../middleware/middleware';
 

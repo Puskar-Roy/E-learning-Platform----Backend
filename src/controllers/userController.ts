@@ -19,6 +19,27 @@ export const getUserById = asyncHandler(async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to get user' });
   }
 });
+export const getUsersCourseById = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    try {
+      const enrollments = await prisma.userEnrollment.findMany({
+        where: {
+          userId: parseInt(userId),
+        },
+        include: {
+          course: true,
+        },
+      });
+      res.json(enrollments);
+    } catch (error) {
+      console.error('Get user enrollments error:', error.message);
+      res
+        .status(500)
+        .json({ message: 'Unable to get user enrollments', success: false });
+    }
+  }
+);
 
 export const updateUserById = asyncHandler(
   async (req: Request, res: Response) => {
