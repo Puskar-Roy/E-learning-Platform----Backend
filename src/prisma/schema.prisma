@@ -13,22 +13,22 @@ enum Role {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  password String
-  role     Role     @default(USER)
-  profile  Profile?
-  enrollments UserEnrollment[]
-  reviews   Review[]
+  id                Int              @id @default(autoincrement())
+  name              String
+  email             String           @unique
+  password          String
+  role              Role             @default(USER)
+  profile           Profile?
+  enrollments       UserEnrollment[]
+  reviews           Review[]
   verificationTokens VerificationToken[]
-  isVerified   Boolean  @default(false)
+  isVerified        Boolean          @default(false)
 }
 
 model Profile {
   id          Int    @id @default(autoincrement())
   user        User   @relation(fields: [userId], references: [id])
-  userId      Int @unique
+  userId      Int    @unique
   profilePic  String?
 }
 
@@ -52,15 +52,16 @@ model UserEnrollment {
 
 model Review {
   id          Int      @id @default(autoincrement())
-  rating     Int        
+  rating      Int
   content     String
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
   course      Course   @relation(fields: [courseId], references: [id])
   courseId    Int
   createdAt   DateTime @default(now())
-}
 
+  @@unique([userId, courseId])
+}
 
 model VerificationToken {
   id           Int      @id @default(autoincrement())

@@ -1,11 +1,17 @@
-// import express, { Router } from 'express';
-// import { getAllUsers, getUser } from '../controllers/userController';
-// import { protect } from '../middleware/middleware';
+import express, { Router } from 'express';
+import {
+  getAllUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+} from '../controllers/userController';
+import { protect, protectAdmin } from '../middleware/middleware';
 
-// const router: Router = express.Router();
+const router: Router = express.Router();
 
-// router.use(protect);
-// router.get('/:id', getUser);
-// router.get('/', getAllUsers);
+router.get('/', protect, getAllUsers);
+router.get('/:userId', protect, getUserById);
+router.put('/:userId', protect, updateUserById);
+router.delete('/:userId', protectAdmin, deleteUserById);
 
-// export default router;
+export default router;

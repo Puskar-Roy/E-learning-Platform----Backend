@@ -10,7 +10,8 @@ import CheckError from './util/checkError';
 import errorHandler from './middleware/errorMiddleware';
 import authRoutes from './routes/authRoutes';
 import { dropDatabase } from './controllers/authController';
-// import userRoutes from './routes/userRoutes';
+import userRoutes from './routes/userRoutes';
+import courseRoutes from './routes/courseRoutes';
 
 const app: Express = express();
 
@@ -39,7 +40,8 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use('/api/v0.1/auth', authRoutes);
-// app.use('/api/users', userRoutes);
+app.use('/api/v0.1/users', userRoutes);
+app.use('/api/v0.1/course', courseRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ success: true, message: 'API IS WORKING 🥳' });

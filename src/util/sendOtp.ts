@@ -1,6 +1,5 @@
 import config from '../config/config';
 import { Resend } from 'resend';
-import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const resend = new Resend(config.RESEND_API);

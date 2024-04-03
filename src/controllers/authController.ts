@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import asyncHandler from '../util/catchAsync';
 import bcrypt from 'bcryptjs';
 import validator from 'validator';
-import { createToken, generateOTP } from '../util/utils';
+import { createToken } from '../util/utils';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { sendEmail } from '../util/sendEmail';
 import { sendOTP } from '../util/sendOtp';
@@ -105,7 +105,6 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
     data: { isVerified: true },
   });
 
-  // Delete the verification token after it has been used
   await prisma.verificationToken.delete({ where: { token } });
 
   res.status(200).send('Email verified successfully');
@@ -116,7 +115,7 @@ export const dropDatabase = asyncHandler(
     try {
       // Find the user by email
       const user = await prisma.user.findUnique({
-        where: { email: 'miajhony6969@gmail.com' },
+        where: { email: 'admin@gmail.com' },
         include: { verificationTokens: true }, // Include verificationTokens in the query
       });
 
