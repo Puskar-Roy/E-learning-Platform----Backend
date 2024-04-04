@@ -45,7 +45,7 @@ app.use(limiter);
 app.use('/api/v0.1/auth', authRoutes);
 app.use('/api/v0.1/users', userRoutes);
 app.use('/api/v0.1/course', courseRoutes);
-app.use('/api/v0.1/review', courseRoutes);
+app.use('/api/v0.1/review', reviewRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ success: true, message: 'API IS WORKING 🥳' });
