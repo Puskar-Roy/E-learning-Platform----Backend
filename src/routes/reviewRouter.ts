@@ -9,8 +9,8 @@ import { protect } from '../middleware/middleware';
 const router: Router = express.Router();
 
 router.use(protect);
-router.post('/reviews', addReview);
-router.put('/reviews/:id', updateReview);
-router.delete('/reviews/:id', deleteReview);
+router.post('/', addReview);
+router.put('/:id', updateReview);
+router.delete('/:id', deleteReview);
 
 export default router;
