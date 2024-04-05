@@ -28,7 +28,7 @@ export const updateReview = asyncHandler(
     try {
       const review = await prisma.review.update({
         where: {
-          id: parseInt(id),
+          id: id,
         },
         data: {
           rating,
@@ -51,7 +51,7 @@ export const deleteReview = asyncHandler(
     try {
       await prisma.review.delete({
         where: {
-          id: parseInt(id),
+          id: id,
         },
       });
       res.status(204).end();
@@ -70,7 +70,7 @@ export const getAllReviewsForCourse = asyncHandler(
     try {
       const reviews = await prisma.review.findMany({
         where: {
-          courseId: parseInt(courseId),
+          courseId: courseId,
         },
       });
       res.json(reviews);

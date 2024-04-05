@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 interface RequestWithUserId extends ExpressRequest {
-  id: number;
+  id: string;
   iat: number;
   exp: number;
 }
@@ -25,7 +25,7 @@ export const protect = async (
     }
 
     const decoded = jwt.verify(token, config.JWT_SECRET) as TokenData;
-    const id = parseInt(decoded._id, 10);
+    const id = decoded._id;
     const user = await prisma.user.findUnique({ where: { id } });
     if (user.id !== id && user.isVerified !== true) {
       throw new Error('Unauthorized: No token provided');
@@ -56,7 +56,7 @@ export const protectAdmin = async (
     }
 
     const decoded = jwt.verify(token, config.JWT_SECRET) as TokenData;
-    const id = parseInt(decoded._id, 10);
+    const id = decoded._id;
     const user = await prisma.user.findUnique({ where: { id } });
     if (user.id !== id || user.isVerified !== true || user.role !== 'ADMIN') {
       throw new Error('Unauthorized: No token provided');

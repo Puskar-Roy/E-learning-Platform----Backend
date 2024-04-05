@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const resend = new Resend(config.RESEND_API);
-export const sendEmail = async (userId: number) => {
+export const sendEmail = async (userId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');
 

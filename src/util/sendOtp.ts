@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const resend = new Resend(config.RESEND_API);
 import { generateOTP } from './utils';
 
-export const sendOTP = async (userId: number) => {
+export const sendOTP = async (userId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');
 

@@ -23,12 +23,31 @@ export const createCourse = asyncHandler(
 
 export const getAllCourse = asyncHandler(
   async (req: Request, res: Response) => {
+    const { category, level } = req.query;
+    console.log(category);
+
     try {
-      const allCourses = await prisma.course.findMany();
-      return res.status(200).json(allCourses);
+      let courses;
+
+      if (category && level) {
+        courses = await prisma.course.findMany({
+          where: {
+            category: {
+              equals: category as string,
+            },
+            level: {
+              equals: level as string,
+            },
+          },
+        });
+        console.log(courses);
+      } else {
+        courses = await prisma.course.findMany();
+      }
+      return res.status(200).json(courses);
     } catch (error) {
-      console.error('Error getting all courses:', error);
-      res.status(500).json({ error: 'Failed to get courses' });
+      console.error('Error fetching courses:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 );
@@ -38,7 +57,7 @@ export const getCourseById = asyncHandler(
     const { id } = req.params;
     try {
       const course = await prisma.course.findUnique({
-        where: { id: parseInt(id) },
+        where: { id: id },
       });
       if (!course) {
         return res.status(404).json({ error: 'Course not found' });
@@ -56,7 +75,7 @@ export const updateCourseById = asyncHandler(
     const { title, category, level } = req.body;
     try {
       const updatedCourse = await prisma.course.update({
-        where: { id: parseInt(id) },
+        where: { id: id },
         data: { title, category, level },
       });
       res.json(updatedCourse);
@@ -72,7 +91,7 @@ export const deleteCourseById = asyncHandler(
     const { id } = req.params;
     try {
       const deletedCourse = await prisma.course.delete({
-        where: { id: parseInt(id) },
+        where: { id: id },
       });
       res.json(deletedCourse);
     } catch (error) {
@@ -87,10 +106,23 @@ export const enrollInCourse = asyncHandler(
     const { courseId } = req.params;
     const { userId } = req.body;
     try {
+      const existingEnrollment = await prisma.userEnrollment.findFirst({
+        where: {
+          userId: userId,
+          courseId: courseId,
+        },
+      });
+
+      if (existingEnrollment) {
+        return res.status(400).json({
+          message: 'User is already enrolled in the course',
+          success: false,
+        });
+      }
       const enrollment = await prisma.userEnrollment.create({
         data: {
-          userId: parseInt(userId, 10),
-          courseId: parseInt(courseId, 10),
+          userId: userId,
+          courseId: courseId,
         },
       });
       res.status(201).json(enrollment);
@@ -109,8 +141,8 @@ export const leaveCourse = asyncHandler(async (req: Request, res: Response) => {
   try {
     await prisma.userEnrollment.deleteMany({
       where: {
-        userId: parseInt(userId, 10),
-        courseId: parseInt(courseId, 10),
+        userId: userId,
+        courseId: courseId,
       },
     });
     res.status(204).end();

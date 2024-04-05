@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export const getUserById = asyncHandler(async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const id = parseInt(userId, 10);
+  const id = userId;
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -25,7 +25,7 @@ export const getUsersCourseById = asyncHandler(
     try {
       const enrollments = await prisma.userEnrollment.findMany({
         where: {
-          userId: parseInt(userId),
+          userId: userId,
         },
         include: {
           course: true,
@@ -45,7 +45,7 @@ export const updateUserById = asyncHandler(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { name, email } = req.body;
-    const id = parseInt(userId, 10);
+    const id = userId;
     try {
       const updatedUser = await prisma.user.update({
         where: { id: id },
@@ -62,7 +62,7 @@ export const updateUserById = asyncHandler(
 export const deleteUserById = asyncHandler(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
-    const id = parseInt(userId, 10);
+    const id = userId;
     try {
       const deletedUser = await prisma.user.delete({
         where: { id: id },
