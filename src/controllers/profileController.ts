@@ -41,3 +41,28 @@ export const updateProfilePic = asyncHandler(
     }
   }
 );
+
+export const createProfilePic = asyncHandler(
+  async (req: RequestWithFile, res: Response) => {
+    const { userId } = req.params;
+    const file = req.file;
+    const fileUri = dataUri(file);
+
+    try {
+      const uploadCloud = await cloudinary.v2.uploader.upload(fileUri.content);
+      const existingProfile = await prisma.profile.findUnique({
+        where: { userId: userId },
+      });
+      if (existingProfile) {
+        throw new Error('Profile Exists!');
+      }
+      const createProfile = await prisma.profile.create({
+        data: { userId: userId, profilePic: uploadCloud.secure_url },
+      });
+      res.status(200).json(createProfile);
+    } catch (error) {
+      console.error('Error updating profile pic in database:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+);
