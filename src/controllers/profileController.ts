@@ -1,8 +1,9 @@
 import cloudinary from 'cloudinary';
 import { v4 as uuidv4 } from 'uuid';
-import { Request, Response } from 'express';
+import { Request as ExpressRequest, Response } from 'express';
 import asyncHandler from '../util/catchAsync';
 import { PrismaClient } from '@prisma/client';
+import dataUri from '../util/dataUri';
 const prisma = new PrismaClient();
 
 cloudinary.v2.config({
@@ -11,32 +12,32 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+interface RequestWithFile extends ExpressRequest {
+  file: unknown;
+}
+
 export const updateProfilePic = asyncHandler(
-  async (req: Request, res: Response) => {
+  async (req: RequestWithFile, res: Response) => {
     const { userId } = req.params;
-    const uploadStream = cloudinary.v2.uploader.upload_stream(
-      {
-        folder: 'profile-pics', // Optional folder in Cloudinary
-      },
-      async (error, result) => {
-        if (error) {
-          console.error('Error uploading image to Cloudinary:', error);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
+    const file = req.file;
+    const fileUri = dataUri(file);
 
-        try {
-          const updatedProfile = await prisma.profile.update({
-            where: { userId: userId },
-            data: { profilePic: result.secure_url },
-          });
-          res.status(200).json(updatedProfile);
-        } catch (error) {
-          console.error('Error updating profile pic in database:', error);
-          res.status(500).json({ error: 'Internal server error' });
-        }
+    try {
+      const uploadCloud = await cloudinary.v2.uploader.upload(fileUri.content);
+      const existingProfile = await prisma.profile.findUnique({
+        where: { userId: userId },
+      });
+      if (!existingProfile) {
+        throw new Error('Profile not found');
       }
-    );
-
-    req.pipe(uploadStream);
+      const updatedProfile = await prisma.profile.update({
+        where: { userId: userId },
+        data: { profilePic: uploadCloud.secure_url },
+      });
+      res.status(200).json(updatedProfile);
+    } catch (error) {
+      console.error('Error updating profile pic in database:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 );
