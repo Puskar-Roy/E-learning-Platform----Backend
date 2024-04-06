@@ -8,6 +8,9 @@ const config = {
   DEV_ENV: process.env.DEV_MODE,
   DATA_BASE: process.env.DATABASE_URL,
   RESEND_API: process.env.RESEND_API,
+  BACKEND_URL: process.env.BACKENDURL,
+  EMAIL: process.env.EMAIL,
+  PASSWORD: process.env.PASSWORD,
 };
 
 export default config;

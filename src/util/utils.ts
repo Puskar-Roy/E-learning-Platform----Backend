@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/config';
+import { randomInt } from 'crypto';
 import { Resend } from 'resend';
 
 export const createToken = (_id: string) => {
@@ -9,5 +10,6 @@ export const createToken = (_id: string) => {
 };
 
 export const generateOTP = (): string => {
-  return Math.random().toString(36).substr(2, 6);
+  const otp = randomInt(100000, 1000000);
+  return otp.toString();
 };

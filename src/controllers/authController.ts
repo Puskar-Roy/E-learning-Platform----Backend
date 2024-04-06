@@ -4,8 +4,8 @@ import bcrypt from 'bcryptjs';
 import validator from 'validator';
 import { createToken } from '../util/utils';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { sendEmail } from '../util/sendEmail';
-import { sendOTP } from '../util/sendOtp';
+import { sendEmail, sendEmailwithNodemailer } from '../util/sendEmail';
+import { sendOTP, sendOTPwithNodemailer } from '../util/sendOtp';
 const prisma = new PrismaClient();
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -19,7 +19,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
       throw new Error('Invalid credentials');
     }
     if (!user.isVerified) {
-      await sendEmail(user.id);
+      // await sendEmail(user.user.id);              //For Resend Mailer
+      await sendEmailwithNodemailer(user.id); //For NodeMailer
       return res.status(200).json({
         success: true,
         message: 'At First Verify Your Email,A Verification email sent.',
@@ -30,6 +31,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
       throw new Error('Invalid credentials');
     }
     const token = createToken(user.id);
+
     return res.status(200).json({
       message: 'Login successful!',
       success: true,
@@ -71,7 +73,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       const token = createToken(newUser.id);
       return { user: newUser, token };
     });
-    await sendEmail(user.user.id);
+    // await sendEmail(user.user.id);              //For Resend Mailer
+    await sendEmailwithNodemailer(user.user.id); //For NodeMailer
     return res
       .status(200)
       .json({ success: true, message: 'Verification email sent' });
@@ -156,7 +159,8 @@ export const forgotPassword = asyncHandler(
     if (!user) {
       throw Error('User not found');
     }
-    await sendOTP(user.id);
+    //await sendOTP(user.id); // For Resend
+    await sendOTPwithNodemailer(user.id); // For Nodemailer
     return res
       .status(200)
       .json({ success: true, message: 'Token sent to your email' });
