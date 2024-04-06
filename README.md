@@ -11,20 +11,20 @@
 
   <p align="center">
     <br />
-    <a href="https://www.postman.com/warped-resonance-359125/workspace/attendance-system"><strong>Postman Public Workspace</strong></a>
+    <a href="https://www.postman.com/warped-resonance-359125/workspace/e-learning-platform"><strong>Postman Public Workspace</strong></a>
     <br />
     <br />
     <a href="https://timekeeper-api.vercel.app">View Demo</a>
     ·
-    <a href="https://github.com/Puskar-Roy/Attendance-System---Backend/issues">Report Bug</a>
+    <a href="https://github.com/Puskar-Roy/E-learning-Platform----Backend/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Puskar-Roy/Attendance-System---Backend/issues">Request Feature</a>
+    <a href="https://github.com/Puskar-Roy/E-learning-Platform----Backend/issues">Request Feature</a>
   </p>
 </div>
 
 
 
-##### Note: *You can test API endpoints only in the development environment; otherwise, a CORS error will occur. To avoid this, create a .env file and add DEV_MODE=DEV inside.*
+##### Note: *For Production, You can add  your frontend url in whitelist then inside .env file add DEV_MODE=PROD, In test api admin credentials - email : admin@admin.com and password : admin*
 
 ## API End Points
 
