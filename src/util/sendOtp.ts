@@ -20,9 +20,12 @@ export const sendOTP = async (userId: string) => {
 
   await resend.emails.send({
     from: 'onboarding@resend.dev',
-    to: user.email,
-    subject: 'RESET PASSWORD',
-    html: `<p>Verify Your OTP For Reset Your Password, This Is Your OTP - ${token}</p>`,
+    to: 'miajhony6969@gmail.com',
+    subject: 'Reset Password OTP',
+    html: `<h2 style="font-family: Arial, sans-serif; line-height: 1.6;">Hey ${user.name} 👋,Verify Your OTP For Reset Your Password, This Is Your OTP - ${token}</h2>
+
+  <h4 style="font-family: Arial, sans-serif; line-height: 1.6;">Please note that this link will expire in 10 minutes. If you did not request this verification, you can safely ignore this email.</h4>
+  <h3 style="font-family: Arial, sans-serif; line-height: 1.6;">Thank you,<br>Puskar Roy - E learning Platform!</h3>`,
   });
 };
 
@@ -48,7 +51,7 @@ export const sendOTPwithNodemailer = async (userId: string) => {
     });
     const mailOptions = {
       from: 'puskarroy300@gmail.com',
-      to: 'miajhony6969@gmail.com',
+      to: user.email,
       subject: 'Reset Password OTP',
       html: ` <h2 style="font-family: Arial, sans-serif; line-height: 1.6;">Hey ${user.name} 👋,Verify Your OTP For Reset Your Password, This Is Your OTP - ${token}</h2>
 

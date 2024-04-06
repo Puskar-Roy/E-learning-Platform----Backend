@@ -22,8 +22,10 @@ export const sendEmail = async (userId: string) => {
     from: 'onboarding@resend.dev',
     to: 'miajhony6969@gmail.com',
     subject: 'Verify Your Email',
-    html: `<p>Verify Your Email Address to complete the Auth process into your account!</p>
-<p>Click <a href="${verificationLink}">here</a> to verify your email. Please note that this link will expire in 10 minutes.</p>`,
+    html: `<h2 style="font-family: Arial, sans-serif; line-height: 1.6;">Hey ${user.name} 👋, Thank you for signing up! To complete the authentication process and access your account, please verify your email address by clicking the link below - </h2>
+  <p><a href="${verificationLink}" style="color: #007bff; text-decoration: none;">Verify Email Address</a></p>
+  <h4 style="font-family: Arial, sans-serif; line-height: 1.6;">Please note that this link will expire in 10 minutes. If you did not request this verification, you can safely ignore this email.</h4>
+  <h3 style="font-family: Arial, sans-serif; line-height: 1.6;">Thank you,<br>Puskar Roy - E learning Platform!</h3>`,
   });
 };
 
@@ -52,7 +54,7 @@ export const sendEmailwithNodemailer = async (userId: string) => {
     console.log(user.email);
     const mailOptions = {
       from: 'puskarroy300@gmail.com',
-      to: 'miajhony6969@gmail.com',
+      to: user.email,
       subject: 'Verify Your Email',
       html: ` <h2 style="font-family: Arial, sans-serif; line-height: 1.6;">Hey ${user.name} 👋, Thank you for signing up! To complete the authentication process and access your account, please verify your email address by clicking the link below - </h2>
   <p><a href="${verificationLink}" style="color: #007bff; text-decoration: none;">Verify Email Address</a></p>
