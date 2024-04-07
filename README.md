@@ -111,6 +111,7 @@ Before you begin contributing to this project, make sure you have the following 
     CLOUDINARY_API_KEY=<api-key>
     CLOUDINARY_API_SECRET=<api-secret>
     DEV_MODE=DEV                                               // node env = DEV or PROD
+    EMAIL_SERVICE=RESEND                                       // RESEND or NODEMAILER 
    ```
 5. **Run This Project:**
    ```bash
