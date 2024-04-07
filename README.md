@@ -24,7 +24,7 @@
 
 
 
-##### Note: *For Production, You can add  your frontend url in whitelist then inside .env file add DEV_MODE=PROD, In test api admin credentials - email : admin@admin.com and password : admin*
+##### Note: *For production, include your frontend URL in the `whitelist` array within `src/index.ts`. Update the `.env` file by setting `DEV_MODE=PROD` to ensure that CORS is restricted. In `DEV_MODE=DEV`, any URL can send requests to the backend. Set `EMAIL_SERVICE=RESEND` to use the default email service as Resend. Note that in the free tier of Resend, you can only send emails to your own email account. The current setup utilizes the NodeMailer SMTP service. For testing the API, use the admin credentials: email: `admin@admin.com`, password: `admin`*
 
 ## API End Points
 
@@ -51,6 +51,7 @@
 ```bash
 /api/v0.1/course                                          POST               //for create a course admin only
 /api/v0.1/course?category=Python&level=Advance            GET                //for get all courses and you can add queries but its optional
+/api/v0.1/course?category=JS&level=Beginner&page=1&pageLimit=3               //pagination with all the queries but its all optional
 /api/v0.1/course/:id                                      PUT                //for update a course admin only
 /api/v0.1/course/:id                                      DELETE             //for delete a course admin only
 /api/v0.1/course/:id                                      GET                //for get a single course
@@ -111,6 +112,10 @@ Before you begin contributing to this project, make sure you have the following 
     CLOUDINARY_API_KEY=<api-key>
     CLOUDINARY_API_SECRET=<api-secret>
     DEV_MODE=DEV                                               // node env = DEV or PROD
+    BACKENDURL=http://localhost:8000                           // your backend URL
+    EMAIL_SERVICE=RESEND                                       // RESEND or NODEMAILER
+    EMAIL=<your-email>                                         // Need If you use Email service as Node Mailer
+    PASSWORD=xbwcpouxmlzcauxm                                  //This password is not your Gmail password. To obtain it, enable two-step verification for your Gmail account. Then, create an app password in your Gmail settings then you get the password.
    ```
 5. **Run This Project:**
    ```bash
