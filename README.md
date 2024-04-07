@@ -24,7 +24,7 @@
 
 
 
-##### Note: *For Production, You can add  your frontend url in whitelist then inside .env file add DEV_MODE=PROD, In test api admin credentials - email : admin@admin.com and password : admin*
+##### Note: *For production, include your frontend URL in the `whitelist` array within `src/index.ts`. Update the `.env` file by setting `DEV_MODE=PROD` to ensure that CORS is restricted. In `DEV_MODE=DEV`, any URL can send requests to the backend. Set `EMAIL_SERVICE=RESEND` to use the default email service as Resend. Note that in the free tier of Resend, you can only send emails to your own email account. The current setup utilizes the NodeMailer SMTP service. For testing the API, use the admin credentials: email: `admin@admin.com`, password: `admin`*
 
 ## API End Points
 
