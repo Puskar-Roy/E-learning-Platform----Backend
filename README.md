@@ -51,6 +51,7 @@
 ```bash
 /api/v0.1/course                                          POST               //for create a course admin only
 /api/v0.1/course?category=Python&level=Advance            GET                //for get all courses and you can add queries but its optional
+/api/v0.1/course?category=JS&level=Beginner&page=1&pageLimit=3               //pagination with all the queries but its all optional
 /api/v0.1/course/:id                                      PUT                //for update a course admin only
 /api/v0.1/course/:id                                      DELETE             //for delete a course admin only
 /api/v0.1/course/:id                                      GET                //for get a single course
