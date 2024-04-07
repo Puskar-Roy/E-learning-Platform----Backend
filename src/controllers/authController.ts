@@ -6,6 +6,7 @@ import { createToken } from '../util/utils';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { sendEmail, sendEmailwithNodemailer } from '../util/sendEmail';
 import { sendOTP, sendOTPwithNodemailer } from '../util/sendOtp';
+import config from '../config/config';
 const prisma = new PrismaClient();
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -19,8 +20,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
       throw new Error('Invalid credentials');
     }
     if (!user.isVerified) {
+      config.EMAIL_SERVICE === 'RESEND'
+        ? await sendEmail(user.id)
+        : await sendEmailwithNodemailer(user.id);
       // await sendEmail(user.user.id);              //For Resend Mailer
-      await sendEmailwithNodemailer(user.id); //For NodeMailer
+      // await sendEmailwithNodemailer(user.id); //For NodeMailer
       return res.status(200).json({
         success: true,
         message: 'At First Verify Your Email,A Verification email sent.',
@@ -73,8 +77,11 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       const token = createToken(newUser.id);
       return { user: newUser, token };
     });
+    config.EMAIL_SERVICE === 'RESEND'
+      ? await sendEmail(user.user.id)
+      : await sendEmailwithNodemailer(user.user.id);
     // await sendEmail(user.user.id);              //For Resend Mailer
-    await sendEmailwithNodemailer(user.user.id); //For NodeMailer
+    // await sendEmailwithNodemailer(user.user.id); //For NodeMailer
     return res
       .status(200)
       .json({ success: true, message: 'Verification email sent' });
@@ -113,41 +120,6 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).send('Email verified successfully');
 });
 
-export const dropDatabase = asyncHandler(
-  async (req: Request, res: Response) => {
-    try {
-      // Find the user by email
-      const user = await prisma.user.findUnique({
-        where: { email: 'admin@gmail.com' },
-        include: { verificationTokens: true }, // Include verificationTokens in the query
-      });
-
-      if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: 'User not found' });
-      }
-
-      // Delete the user's verification tokens first
-      await prisma.verificationToken.deleteMany({
-        where: { userId: user.id },
-      });
-
-      // Delete the user
-      await prisma.user.delete({
-        where: { id: user.id },
-      });
-
-      return res.status(200).json({ success: true, message: 'DB Deleted!' });
-    } catch (error) {
-      console.error('Error dropping database:', error);
-      return res
-        .status(500)
-        .json({ success: false, message: 'Error dropping database' });
-    }
-  }
-);
-
 export const forgotPassword = asyncHandler(
   async (req: Request, res: Response) => {
     const { email } = req.body;
@@ -159,8 +131,11 @@ export const forgotPassword = asyncHandler(
     if (!user) {
       throw Error('User not found');
     }
+    config.EMAIL_SERVICE === 'RESEND'
+      ? await sendOTP(user.id)
+      : await sendOTPwithNodemailer(user.id);
     //await sendOTP(user.id); // For Resend
-    await sendOTPwithNodemailer(user.id); // For Nodemailer
+    //await sendOTPwithNodemailer(user.id); // For Nodemailer
     return res
       .status(200)
       .json({ success: true, message: 'Token sent to your email' });

@@ -23,27 +23,33 @@ export const createCourse = asyncHandler(
 
 export const getAllCourse = asyncHandler(
   async (req: Request, res: Response) => {
-    const { category, level } = req.query;
-    console.log(category);
+    const { category, level, page, pageLimit } = req.query;
 
     try {
       let courses;
 
-      if (category && level) {
+      if (category || level) {
         courses = await prisma.course.findMany({
           where: {
-            category: {
-              equals: category as string,
-            },
-            level: {
-              equals: level as string,
-            },
+            ...(category && { category: { equals: category as string } }),
+            ...(level && { level: { equals: level as string } }),
           },
+          skip:
+            page && pageLimit
+              ? (parseInt(page as string) - 1) * parseInt(pageLimit as string)
+              : undefined,
+          take: pageLimit ? parseInt(pageLimit as string) : undefined,
         });
-        console.log(courses);
       } else {
-        courses = await prisma.course.findMany();
+        courses = await prisma.course.findMany({
+          skip:
+            page && pageLimit
+              ? (parseInt(page as string) - 1) * parseInt(pageLimit as string)
+              : undefined,
+          take: pageLimit ? parseInt(pageLimit as string) : undefined,
+        });
       }
+
       return res.status(200).json(courses);
     } catch (error) {
       console.error('Error fetching courses:', error);

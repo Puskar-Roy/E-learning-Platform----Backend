@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 const resend = new Resend(config.RESEND_API);
 import { generateOTP } from './utils';
 
+//Resend Version
 export const sendOTP = async (userId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');
@@ -29,6 +30,7 @@ export const sendOTP = async (userId: string) => {
   });
 };
 
+//Node Mailer Version
 export const sendOTPwithNodemailer = async (userId: string) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',

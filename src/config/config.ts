@@ -11,6 +11,7 @@ const config = {
   BACKEND_URL: process.env.BACKENDURL,
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
+  EMAIL_SERVICE: process.env.EMAIL_SERVICE,
 };
 
 export default config;

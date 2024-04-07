@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
 const prisma = new PrismaClient();
 const resend = new Resend(config.RESEND_API);
+
+//Resend Version
 export const sendEmail = async (userId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');
@@ -29,6 +31,7 @@ export const sendEmail = async (userId: string) => {
   });
 };
 
+//Node Mailer Version
 export const sendEmailwithNodemailer = async (userId: string) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
