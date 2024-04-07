@@ -10,7 +10,6 @@ import config from './config/config';
 import CheckError from './util/checkError';
 import errorHandler from './middleware/errorMiddleware';
 import authRoutes from './routes/authRoutes';
-import { dropDatabase } from './controllers/authController';
 import userRoutes from './routes/userRoutes';
 import courseRoutes from './routes/courseRoutes';
 import reviewRoutes from './routes/reviewRouter';
@@ -50,8 +49,6 @@ app.use('/api/v0.1/review', reviewRoutes);
 app.get('/', (req: Request, res: Response) => {
   res.json({ success: true, message: 'API IS WORKING 🥳' });
 });
-
-app.delete('/drop', dropDatabase);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new CheckError(`Can't find ${req.originalUrl} on this server!`, 404));
