@@ -111,7 +111,10 @@ Before you begin contributing to this project, make sure you have the following 
     CLOUDINARY_API_KEY=<api-key>
     CLOUDINARY_API_SECRET=<api-secret>
     DEV_MODE=DEV                                               // node env = DEV or PROD
-    EMAIL_SERVICE=RESEND                                       // RESEND or NODEMAILER 
+    BACKENDURL=http://localhost:8000                           // your backend URL
+    EMAIL_SERVICE=RESEND                                       // RESEND or NODEMAILER
+    EMAIL=<your-email>                                         // Need If you use Email service as Node Mailer
+    PASSWORD=xbwcpouxmlzcauxm                                  //This password is not your Gmail password. To obtain it, enable two-step verification for your Gmail account. Then, create an app password in your Gmail settings then you get the password.
    ```
 5. **Run This Project:**
    ```bash
