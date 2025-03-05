@@ -56,7 +56,7 @@ export const sendEmailwithNodemailer = async (userId: string) => {
     if (!user) throw new Error('User not found');
     console.log(user.email);
     const mailOptions = {
-      from: 'puskarroy300@gmail.com',
+      from: 'puskarroy600@gmail.com',
       to: user.email,
       subject: 'Verify Your Email',
       html: ` <h2 style="font-family: Arial, sans-serif; line-height: 1.6;">Hey ${user.name} 👋, Thank you for signing up! To complete the authentication process and access your account, please verify your email address by clicking the link below - </h2>
